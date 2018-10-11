@@ -425,19 +425,13 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             let swipePositionAnimation = POPBasicAnimation(propertyNamed: kPOPLayerTranslationXY)
             swipePositionAnimation?.fromValue = NSValue(cgPoint:POPLayerGetTranslationXY(layer))
             swipePositionAnimation?.toValue = NSValue(cgPoint:animationPointForDirection(direction))
-            swipePositionAnimation?.duration = cardSwipeActionAnimationDuration
-            swipePositionAnimation?.completionBlock = {
-                (_, _) in
-                self.removeFromSuperview()
-                completionHandler()
-            }
-            
+            swipePositionAnimation?.duration = cardSwipeActionAnimationDuration * 2
             layer.pop_add(swipePositionAnimation, forKey: "swipePositionAnimation")
             
             let swipeRotationAnimation = POPBasicAnimation(propertyNamed: kPOPLayerRotation)
             swipeRotationAnimation?.fromValue = POPLayerGetRotationZ(layer)
             swipeRotationAnimation?.toValue = CGFloat(animationRotationForDirection(direction))
-            swipeRotationAnimation?.duration = cardSwipeActionAnimationDuration
+            swipeRotationAnimation?.duration = cardSwipeActionAnimationDuration * 2
             
             layer.pop_add(swipeRotationAnimation, forKey: "swipeRotationAnimation")
             
@@ -445,6 +439,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             let overlayAlphaAnimation = POPBasicAnimation(propertyNamed: kPOPViewAlpha)
             overlayAlphaAnimation?.toValue = 1.0
             overlayAlphaAnimation?.duration = cardSwipeActionAnimationDuration
+            overlayAlphaAnimation?.completionBlock = {
+                (_, _) in
+                self.removeFromSuperview()
+                completionHandler()
+            }
             overlayView?.pop_add(overlayAlphaAnimation, forKey: "swipeOverlayAnimation")
         }
     }
